@@ -1,9 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
-import Layout from 'lib/components/Layout';
-import { ProductCard } from 'lib/components/ProductCard';
+import Layout from 'src/lib/components/Layout';
+import { ProductCard } from 'src/lib/components/ProductCard';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import shopify, { Products } from '../lib/shopify';
+import shopify, { Products } from '../lib/state/shopify/services';
 
 const PostPage = () => {
   const [products, setProducts] = useState<Products>([]);

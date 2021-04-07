@@ -1,4 +1,5 @@
-import shopify, { Product } from 'lib/shopify';
+import { actions } from 'src/lib/state/shopify/actor';
+import { Product } from 'src/lib/state/shopify/services';
 import Link from 'next/link';
 import React from 'react';
 
@@ -11,7 +12,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         <button
           className="btn btn-primary me-3"
           onClick={() => {
-            shopify.addProduct(product.variants[0].id as string);
+            actions.addProduct(product.variants[0].id as string);
           }}>
           Add to Cart
         </button>

@@ -1,13 +1,13 @@
-import { CartContext } from 'lib/shopify';
-import { useContext } from 'react';
+import { useCart } from 'src/lib/state/shopify/actor';
 
 const Nav: React.FC = () => {
-  const cartContext = useContext(CartContext);
+  const cart = useCart();
+  const quantities = cart?.lineItems?.map((item) => item.quantity);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           Nerd Shirts
         </a>
         <button
@@ -23,16 +23,17 @@ const Nav: React.FC = () => {
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/">
                 Home
               </a>
             </li>
           </ul>
           <a
             className="navbar-text ms-auto"
-            href={(cartContext as any).webUrl}
+            href={cart?.checkoutUrl}
             target="_blank">
-            Cart: {cartContext?.lineItems?.length ?? 0}
+            Cart:{' '}
+            {quantities?.reduce((total, quantity) => total + quantity) ?? 0}
           </a>
         </div>
       </div>

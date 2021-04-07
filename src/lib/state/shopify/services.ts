@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useContext } from 'react';
 import Client from 'shopify-buy';
 const client = Client.buildClient({
   domain: 'devrel.myshopify.com',
   storefrontAccessToken: 'b93aba823553b27aee2c51744caf0cf1',
 });
+
 export type Product = Pick<
   ShopifyBuy.Product,
   'id' | 'title' | 'description' | 'onlineStoreUrl' | 'images' | 'variants'
 > & { handle: string };
+
 export type Products = Product[];
 
 function transformProduct(product: ShopifyBuy.Product) {
@@ -42,31 +42,19 @@ async function addProduct(variantId: string) {
   await client.checkout.addLineItems(await getCheckoutId(), [
     { variantId, quantity: 1 },
   ]);
-  _setCartContext(await getCheckout());
 }
 
-async function getCheckout() {
+async function getCheckout(): Promise<Client.Cart> {
   const checkout = await client.checkout.fetch(await getCheckoutId());
-  console.log(checkout);
   return checkout;
 }
 
-let _setCartContext: React.Dispatch<React.SetStateAction<ShopifyBuy.Cart>>;
-const _cartContext: ShopifyBuy.Cart = {} as any;
-export const CartContext = React.createContext(_cartContext);
-
-export const createCartContext = () => {
-  const [cartContext, setCartContext] = useState(_cartContext);
-  _setCartContext = setCartContext;
-  return cartContext;
-};
-
-async function getProduct(handle: string) {
+async function getProduct(handle: string): Promise<Product> {
   const product = await client.product.fetchByHandle(handle);
   return transformProduct(product);
 }
 
-async function getProductsByCollection(handle: string) {
+async function getProductsByCollection(handle: string): Promise<Products> {
   const collection = await client.collection.fetchByHandle(handle);
   return (collection as any).products.map((product: ShopifyBuy.Product) =>
     transformProduct(product),

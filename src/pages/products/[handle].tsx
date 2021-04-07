@@ -1,14 +1,14 @@
-import Layout from 'lib/components/Layout';
-import shopify, { Product } from 'lib/shopify';
+import Layout from 'src/lib/components/Layout';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useQuery, gql } from '@apollo/client';
-import PostCard from 'lib/components/PostCard';
+import PostCard from 'src/lib/components/PostCard';
+import { actions, useProduct } from 'src/lib/state/shopify/actor';
 
 const ProductPage: React.FC = () => {
-  const [product, setProduct] = useState<Product>();
   const router = useRouter();
   const { handle } = router.query;
+  const product = useProduct(true, handle);
 
   const { data } = useQuery(
     gql`
@@ -29,15 +29,6 @@ const ProductPage: React.FC = () => {
     },
   );
 
-  useEffect(() => {
-    async function getProduct() {
-      setProduct(await shopify.getProduct(handle as any));
-    }
-    if (handle) {
-      getProduct();
-    }
-  }, [handle]);
-
   return (
     <Layout>
       <div className="row py-5">
@@ -54,7 +45,7 @@ const ProductPage: React.FC = () => {
               <button
                 className="btn btn-primary me-3"
                 onClick={() => {
-                  shopify.addProduct(product?.variants[0].id as string);
+                  actions.addProduct(product?.variants[0].id as string);
                 }}>
                 Add to Cart
               </button>
