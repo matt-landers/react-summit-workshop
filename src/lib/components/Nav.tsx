@@ -30,7 +30,7 @@ const Nav: React.FC = () => {
           </ul>
           <a
             className="navbar-text ms-auto"
-            href={cart?.checkoutUrl}
+            href={(cart as any)?.webUrl}
             target="_blank">
             Cart:{' '}
             {quantities?.reduce((total, quantity) => total + quantity) ?? 0}

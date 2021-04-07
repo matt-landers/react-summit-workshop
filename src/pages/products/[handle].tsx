@@ -8,7 +8,7 @@ import { actions, useProduct } from 'src/lib/state/shopify/actor';
 const ProductPage: React.FC = () => {
   const router = useRouter();
   const { handle } = router.query;
-  const product = useProduct({ actionArgs: [handle] });
+  const product = useProduct({ actionArgs: [handle as string] });
 
   const { data } = useQuery(
     gql`

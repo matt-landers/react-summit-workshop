@@ -29,17 +29,31 @@ export const actions = {
   },
 };
 
-export const useProduct = createStateHook<Product>({
+export const useProduct = createStateHook<
+  Product,
+  typeof tate,
+  typeof actions.getProduct
+>({
   tate,
   action: actions.getProduct,
   property: 'product',
 });
-export const useProducts = createStateHook<Products>({
+
+export const useProducts = createStateHook<
+  Products,
+  typeof tate,
+  typeof actions.getProducts
+>({
   tate,
   action: actions.getProducts,
   property: 'products',
 });
-export const useCart = createStateHook<Cart>({
+
+export const useCart = createStateHook<
+  Cart,
+  typeof tate,
+  typeof actions.getCart
+>({
   tate,
   action: actions.getCart,
   property: 'cart',
