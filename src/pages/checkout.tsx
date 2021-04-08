@@ -22,7 +22,7 @@ const CartPage: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="row">
+      <div className="row" style={{ display: hasItems ? '' : 'none' }}>
         <a
           href={((checkout as any) as { webUrl: string })?.webUrl}
           target="_blank"
