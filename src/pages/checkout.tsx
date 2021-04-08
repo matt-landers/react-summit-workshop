@@ -1,7 +1,7 @@
 import Layout from 'src/lib/components/Layout';
 import React from 'react';
 import { useCheckout } from 'src/lib/state/shopify/actor';
-import { CheckoutLineItemCard } from 'src/lib/components/CartItemCard';
+import { CheckoutLineItemCard } from 'src/lib/components/CheckoutLineItemCard';
 
 const CartPage: React.FC = () => {
   const checkout = useCheckout();
@@ -9,9 +9,9 @@ const CartPage: React.FC = () => {
   return (
     <Layout>
       <div className="row py-5">
-        {checkout?.lineItems.edges.nodes.map((item) => (
-          <div key={item.id} className="col-md-4">
-            <CheckoutLineItemCard key={item.id} item={item} />
+        {checkout?.lineItems.edges.map((item) => (
+          <div key={item.node.id} className="col-md-4">
+            <CheckoutLineItemCard key={item.node.id} item={item.node} />
           </div>
         ))}
       </div>

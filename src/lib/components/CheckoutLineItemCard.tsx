@@ -28,9 +28,9 @@ export const CheckoutLineItemCard: React.FC<{ item: CheckoutLineItem }> = ({
           Remove from Cart
         </button>
         <Link
-          href={`/products/${(item as any).variant.product.handle as string}`}>
+          href={`/products/${item.variant.product.handle as string}`}>
           <a
-            href={`/products/${(item as any).variant.product.handle as string}`}
+            href={`/products/${item.variant.product.handle as string}`}
             className="btn btn-secondary">
             View Details
           </a>

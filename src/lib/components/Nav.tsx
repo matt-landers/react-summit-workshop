@@ -3,8 +3,8 @@ import { useCheckout } from 'src/lib/state/shopify/actor';
 
 const Nav: React.FC = () => {
   const checkout = useCheckout();
-  const quantities = checkout?.lineItems?.edges.nodes.map(
-    (item) => item.quantity,
+  const quantities = checkout?.lineItems?.edges.map(
+    (item) => item.node.quantity,
   );
 
   return (

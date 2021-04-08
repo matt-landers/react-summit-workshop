@@ -9,10 +9,14 @@ import {
   CREATE_CHECKOUT,
   GetCheckout,
   GetProduct,
+  GetProductsByCollection,
   GET_CHECKOUT,
   GET_PRODUCT,
+  GET_PRODUCTS_BY_COLLECTION,
   Product,
   Products,
+  RemoveLineItemVariables,
+  REMOVE_LINE_ITEM,
 } from './queries';
 
 const client = new ApolloClient({
@@ -55,8 +59,12 @@ async function addProduct(variantId: string): Promise<void> {
 }
 
 async function removeProduct(variantId: string) {
-  await client.mutate({
-    mutation: ADD_LINE_ITEM, //FIX ME (REMOVE)
+  await client.mutate<any, RemoveLineItemVariables>({
+    mutation: REMOVE_LINE_ITEM,
+    variables: {
+      checkoutId: await getCheckoutId(),
+      lineItemIds: [variantId],
+    },
   });
 }
 
@@ -81,14 +89,14 @@ async function getProduct(handle: string): Promise<Product> {
 }
 
 async function getProductsByCollection(handle: string): Promise<Products> {
-  const { data: collection } = await client.query({
-    query: ALL_PRODUCTS,
+  const { data } = await client.query<GetProductsByCollection>({
+    query: GET_PRODUCTS_BY_COLLECTION,
     variables: {
       handle,
     },
   });
 
-  return collection.products;
+  return data.collectionByHandle.products;
 }
 
 export default {

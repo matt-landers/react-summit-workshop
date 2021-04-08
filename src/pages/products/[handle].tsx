@@ -38,7 +38,7 @@ const ProductPage: React.FC = () => {
           <div className="card">
             <img
               style={{ maxWidth: '300px' }}
-              src={product?.images.edges.nodes[0].src}
+              src={product?.images.edges[0].node.src}
               alt=""
               className="card-img-top"
             />
@@ -49,7 +49,7 @@ const ProductPage: React.FC = () => {
                 className="btn btn-primary me-3"
                 onClick={() => {
                   void actions.addProduct(
-                    product?.variants.edges.nodes[0].id as string,
+                    product?.variants.edges[0].node.id as string,
                   );
                 }}>
                 Add to Cart

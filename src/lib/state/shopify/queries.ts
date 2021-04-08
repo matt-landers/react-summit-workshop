@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 
 export interface Connection<T> {
   edges: {
-    nodes: T[];
-  };
+    node: T;
+  }[];
 }
 
 export interface ProductImage {
@@ -22,7 +22,7 @@ export interface Product {
 export interface ProductVariant {
   id: string;
   image?: ProductImage;
-  product?: Pick<Product, 'handle'>;
+  product: Pick<Product, 'handle'>;
 }
 
 export interface CheckoutInfo {
@@ -37,6 +37,14 @@ export interface CheckoutInfo {
 }
 
 export interface Products extends Connection<Product> {}
+
+export interface Collection {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  products: Products;
+}
 
 const PRODUCT_DATA = gql`
   fragment productData on Product {
@@ -212,3 +220,26 @@ export type RemoveLineItemVariables = {
   checkoutId: string;
   lineItemIds: string[];
 };
+
+export const GET_PRODUCTS_BY_COLLECTION = gql`
+  ${PRODUCT_DATA}
+  query GetProductsByCollection($handle: String!) {
+    collectionByHandle(handle: $handle) {
+      id
+      handle
+      title
+      description
+      products(first: 10) {
+        edges {
+          nodes {
+            ...productData
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface GetProductsByCollection {
+  collectionByHandle: Collection;
+}
