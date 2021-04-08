@@ -1,9 +1,11 @@
 import React from 'react';
-import { useCart } from 'src/lib/state/shopify/actor';
+import { useCheckout } from 'src/lib/state/shopify/actor';
 
 const Nav: React.FC = () => {
-  const cart = useCart();
-  const quantities = cart?.lineItems?.map((item) => item.quantity);
+  const checkout = useCheckout();
+  const quantities = checkout?.lineItems?.edges.nodes.map(
+    (item) => item.quantity,
+  );
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">

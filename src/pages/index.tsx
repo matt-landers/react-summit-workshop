@@ -5,11 +5,12 @@ import { useProducts } from 'src/lib/state/shopify/actor';
 
 function Home() {
   const products = useProducts();
+  console.log(products);
   return (
     <Layout>
       <div className="row py-5">
-        {products &&
-          products.map((product) => (
+        {products?.edges?.length > 0 &&
+          products.edges.nodes.map((product) => (
             <div key={product.id} className="col-md-4">
               <ProductCard product={product} />
             </div>

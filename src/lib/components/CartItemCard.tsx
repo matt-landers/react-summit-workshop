@@ -1,9 +1,9 @@
 import { actions } from 'src/lib/state/shopify/actor';
 import Link from 'next/link';
 import React from 'react';
-import { CartLineItem } from '../state/shopify/services';
+import { CheckoutLineItem } from '../state/shopify/queries';
 
-export const CartLineItemCard: React.FC<{ item: CartLineItem }> = ({
+export const CheckoutLineItemCard: React.FC<{ item: CheckoutLineItem }> = ({
   item,
 }) => {
   return (

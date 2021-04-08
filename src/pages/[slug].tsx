@@ -47,7 +47,7 @@ const PostPage = () => {
           </article>
         </div>
         <div className="col-md-3">
-          {products?.map((product) => (
+          {products?.edges.nodes.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

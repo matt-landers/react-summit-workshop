@@ -1,11 +1,12 @@
 import tates from 'tates';
 import { createStateHook } from 'react-tates';
-import service, { Products, Product, Cart } from './services';
+import service from './services';
+import { Checkout, Product, Products } from './queries';
 
 export interface ShopifyState {
   product: Product;
   products: Products;
-  cart: Cart;
+  checkout: Checkout;
 }
 
 const tate = tates<ShopifyState>();
@@ -18,16 +19,16 @@ export const actions = {
   async getProduct(handle: string) {
     state.product = await service.getProduct(handle);
   },
-  async getCart() {
-    state.cart = await service.getCheckout();
+  async getCheckout() {
+    state.checkout = await service.getCheckout();
   },
   async addProduct(variantId: string): Promise<void> {
     await service.addProduct(variantId);
-    void actions.getCart();
+    void actions.getCheckout();
   },
   async removeProduct(variantId: string): Promise<void> {
     await service.removeProduct(variantId);
-    void actions.getCart();
+    void actions.getCheckout();
   },
 };
 
@@ -51,12 +52,12 @@ export const useProducts = createStateHook<
   property: 'products',
 });
 
-export const useCart = createStateHook<
-  Cart,
+export const useCheckout = createStateHook<
+  Checkout,
   typeof tate,
-  typeof actions.getCart
+  typeof actions.getCheckout
 >({
   tate,
-  action: actions.getCart,
+  action: actions.getCheckout,
   property: 'cart',
 });

@@ -1,23 +1,23 @@
 import Layout from 'src/lib/components/Layout';
 import React from 'react';
-import { useCart } from 'src/lib/state/shopify/actor';
-import { CartLineItemCard } from 'src/lib/components/CartItemCard';
+import { useCheckout } from 'src/lib/state/shopify/actor';
+import { CheckoutLineItemCard } from 'src/lib/components/CartItemCard';
 
 const CartPage: React.FC = () => {
-  const cart = useCart();
+  const checkout = useCheckout();
 
   return (
     <Layout>
       <div className="row py-5">
-        {cart?.lineItems.map((item) => (
+        {checkout?.lineItems.edges.nodes.map((item) => (
           <div key={item.id} className="col-md-4">
-            <CartLineItemCard key={item.id} item={item} />
+            <CheckoutLineItemCard key={item.id} item={item} />
           </div>
         ))}
       </div>
       <div className="row">
         <a
-          href={((cart as any) as { webUrl: string })?.webUrl}
+          href={((checkout as any) as { webUrl: string })?.webUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-secondary">
