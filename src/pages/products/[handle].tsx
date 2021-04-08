@@ -53,9 +53,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                 type="button"
                 className="btn btn-primary me-3"
                 onClick={() => {
-                  void actions.addProduct(
-                    product?.variants.edges[0].node.id as string,
-                  );
+                  void actions.addProduct(product?.variants.edges[0].node.id);
                 }}>
                 Add to Cart
               </button>
@@ -76,7 +74,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
 
 export default ProductPage;
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return {
     paths: [],
     fallback: 'blocking',

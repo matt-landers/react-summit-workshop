@@ -23,14 +23,13 @@ export const CheckoutLineItemCard: React.FC<{ item: CheckoutLineItem }> = ({
           type="button"
           className="btn btn-primary me-3"
           onClick={() => {
-            void actions.removeProduct(item.id as string);
+            void actions.removeProduct(item.id);
           }}>
           Remove from Cart
         </button>
-        <Link
-          href={`/products/${item.variant.product.handle as string}`}>
+        <Link href={`/products/${item.variant.product.handle}`}>
           <a
-            href={`/products/${item.variant.product.handle as string}`}
+            href={`/products/${item.variant.product.handle}`}
             className="btn btn-secondary">
             View Details
           </a>

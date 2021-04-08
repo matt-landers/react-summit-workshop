@@ -62,7 +62,7 @@ const PostPage = ({ products }: PostPageProps) => {
 
 export default PostPage;
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return {
     paths: [],
     fallback: 'blocking',

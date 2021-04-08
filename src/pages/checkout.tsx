@@ -8,7 +8,7 @@ const CartPage: React.FC = () => {
   const hasItems = (checkout?.lineItems?.edges?.length as number) > 0;
   return (
     <Layout>
-      {!hasItems && (
+      {checkout && !hasItems && (
         <div className="row pt-5">
           <div className="col">
             <h1>No items in cart</h1>

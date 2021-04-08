@@ -5,6 +5,7 @@ import {
   AllProducts,
   ALL_PRODUCTS,
   Checkout,
+  CheckoutCreateInput,
   CreateCheckout,
   CREATE_CHECKOUT,
   GetCheckout,
@@ -19,7 +20,10 @@ import {
   REMOVE_LINE_ITEM,
 } from './queries';
 
+const isServerSide = typeof window === 'undefined';
+
 const client = new ApolloClient({
+  ssrMode: isServerSide,
   uri: 'https://devrel.myshopify.com/api/2021-04/graphql.json',
   cache: new InMemoryCache(),
   headers: {
@@ -35,11 +39,19 @@ export async function allProducts(): Promise<Products> {
 }
 
 export async function getCheckoutId(): Promise<string> {
+  if (isServerSide) {
+    return '';
+  }
+
   if (localStorage.getItem('checkoutId')) {
     return localStorage.getItem('checkoutId') ?? '';
   }
-  const { data } = await client.mutate<CreateCheckout>({
+
+  const { data } = await client.mutate<CreateCheckout, CheckoutCreateInput>({
     mutation: CREATE_CHECKOUT,
+    variables: {
+      input: {},
+    },
   });
   localStorage.setItem(
     'checkoutId',
@@ -49,7 +61,10 @@ export async function getCheckoutId(): Promise<string> {
 }
 
 export async function addProduct(variantId: string): Promise<void> {
-  console.log(variantId);
+  if (isServerSide) {
+    return;
+  }
+
   await client.mutate<any, AddLineItemVariables>({
     mutation: ADD_LINE_ITEM,
     variables: {
@@ -60,6 +75,10 @@ export async function addProduct(variantId: string): Promise<void> {
 }
 
 export async function removeProduct(variantId: string) {
+  if (isServerSide) {
+    return;
+  }
+
   await client.mutate<any, RemoveLineItemVariables>({
     mutation: REMOVE_LINE_ITEM,
     variables: {
@@ -69,13 +88,17 @@ export async function removeProduct(variantId: string) {
   });
 }
 
-export async function getCheckout(): Promise<Checkout> {
+export async function getCheckout(): Promise<Checkout | null> {
+  if (isServerSide) {
+    return null;
+  }
+
   const { data } = await client.query<GetCheckout>({
     query: GET_CHECKOUT,
     variables: {
       id: await getCheckoutId(),
     },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'no-cache',
   });
   return data.node;
 }
@@ -90,7 +113,9 @@ export async function getProduct(handle: string): Promise<Product> {
   return data.productByHandle;
 }
 
-export async function getProductsByCollection(handle: string): Promise<Products> {
+export async function getProductsByCollection(
+  handle: string,
+): Promise<Products> {
   const { data } = await client.query<GetProductsByCollection>({
     query: GET_PRODUCTS_BY_COLLECTION,
     variables: {

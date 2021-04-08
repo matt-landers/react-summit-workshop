@@ -12,7 +12,13 @@ const { state } = tate;
 
 export const actions = {
   async getCheckout() {
-    state.checkout = await service.getCheckout();
+    const checkout = await service.getCheckout();
+
+    if (!checkout) {
+      return;
+    }
+
+    state.checkout = checkout;
   },
   async addProduct(variantId: string): Promise<void> {
     await service.addProduct(variantId);

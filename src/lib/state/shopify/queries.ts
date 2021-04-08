@@ -36,7 +36,7 @@ export interface CheckoutInfo {
   };
 }
 
-export interface Products extends Connection<Product> {}
+export type Products = Connection<Product>;
 
 export interface Collection {
   id: string;
@@ -124,6 +124,10 @@ export const CREATE_CHECKOUT = gql`
 
 export interface CreateCheckout {
   checkoutCreate: CheckoutInfo;
+}
+
+export interface CheckoutCreateInput {
+  input: any;
 }
 
 export interface CheckoutLineItem {
