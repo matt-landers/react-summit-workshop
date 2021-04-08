@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Products } from 'src/lib/state/shopify/queries';
 import {
-  allProducts,
   getProductsByCollection,
 } from 'src/lib/state/shopify/services';
 import { getApolloClient } from '@wpengine/headless';
+import { getNextStaticProps } from '@wpengine/headless/next';
 import { GetStaticPropsContext } from 'next';
 
 const GET_POST = gql`
@@ -93,9 +93,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     products = await getProductsByCollection(tag.replace('collection-', ''));
   }
 
-  return {
-    props: {
-      products,
-    },
-  };
+  const result = await getNextStaticProps(context);
+  result.props.products = products;
+
+  return result;
 }
