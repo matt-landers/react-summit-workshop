@@ -53,7 +53,7 @@ async function addProduct(variantId: string): Promise<void> {
     mutation: ADD_LINE_ITEM,
     variables: {
       checkoutId: await getCheckoutId(),
-      lineItems: [{ quantity: 1, variantId: btoa(variantId) }],
+      lineItems: [{ quantity: 1, variantId }],
     },
   });
 }

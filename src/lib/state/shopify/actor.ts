@@ -59,5 +59,5 @@ export const useCheckout = createStateHook<
 >({
   tate,
   action: actions.getCheckout,
-  property: 'cart',
+  property: 'checkout',
 });
