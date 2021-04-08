@@ -4,7 +4,31 @@ import { ProductCard } from 'src/lib/components/ProductCard';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Products } from 'src/lib/state/shopify/queries';
-import { allProducts } from 'src/lib/state/shopify/services';
+import {
+  allProducts,
+  getProductsByCollection,
+} from 'src/lib/state/shopify/services';
+import { getApolloClient } from '@wpengine/headless';
+import { GetStaticPropsContext } from 'next';
+
+const GET_POST = gql`
+  query GetPost($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      featuredImage {
+        node {
+          uri
+        }
+      }
+      title
+      content
+      tags(where: { search: "collection-" }) {
+        nodes {
+          name
+        }
+      }
+    }
+  }
+`;
 
 interface PostPageProps {
   products: Products;
@@ -13,31 +37,11 @@ interface PostPageProps {
 const PostPage = ({ products }: PostPageProps) => {
   const router = useRouter();
   const { slug } = router.query;
-  const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(
-    gql`
-      query GetPost($slug: ID!) {
-        post(id: $slug, idType: SLUG) {
-          featuredImage {
-            node {
-              uri
-            }
-          }
-          title
-          content
-          tags(where: { search: "collection-" }) {
-            nodes {
-              name
-            }
-          }
-        }
-      }
-    `,
-    {
-      variables: {
-        slug,
-      },
+  const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(GET_POST, {
+    variables: {
+      slug,
     },
-  );
+  });
 
   const post = data?.post;
 
@@ -69,8 +73,25 @@ export function getStaticPaths() {
   };
 }
 
-export async function getStaticProps() {
-  const products = await allProducts();
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const slug = context?.params?.slug as string;
+  const client = getApolloClient(context);
+
+  const { data } = await client.query({
+    query: GET_POST,
+    variables: {
+      slug,
+    },
+  });
+
+  let products: Products = { edges: [] };
+
+  if (data.post.tags.nodes.length > 0) {
+    const tag: string = data.post.tags.nodes.map(
+      (tag: { name: string }) => tag.name,
+    )[0];
+    products = await getProductsByCollection(tag.replace('collection-', ''));
+  }
 
   return {
     props: {

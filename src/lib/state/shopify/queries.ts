@@ -235,7 +235,7 @@ export const GET_PRODUCTS_BY_COLLECTION = gql`
       description
       products(first: 10) {
         edges {
-          nodes {
+          node {
             ...productData
           }
         }
