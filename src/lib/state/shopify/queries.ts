@@ -14,7 +14,6 @@ export interface Product {
   id: string | number;
   title: string;
   description: string;
-  onlineStoreUrl?: string;
   images: Connection<ProductImage>;
   variants: Connection<ProductVariant>;
   handle: string;
