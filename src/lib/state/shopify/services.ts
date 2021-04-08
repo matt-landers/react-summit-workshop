@@ -1,4 +1,5 @@
 import Client from 'shopify-buy';
+
 const client = Client.buildClient({
   domain: 'devrel.myshopify.com',
   storefrontAccessToken: 'b93aba823553b27aee2c51744caf0cf1',
@@ -31,17 +32,20 @@ async function allProducts(): Promise<Products> {
 async function getCheckoutId(): Promise<string> {
   if (localStorage.getItem('checkoutId')) {
     return localStorage.getItem('checkoutId') ?? '';
-  } else {
-    const checkout = await client.checkout.create();
-    localStorage.setItem('checkoutId', checkout.id as string);
-    return checkout.id as string;
   }
+  const checkout = await client.checkout.create();
+  localStorage.setItem('checkoutId', checkout.id as string);
+  return checkout.id as string;
 }
 
 async function addProduct(variantId: string) {
   await client.checkout.addLineItems(await getCheckoutId(), [
     { variantId, quantity: 1 },
   ]);
+}
+
+async function removeProduct(variantId: string) {
+  await client.checkout.removeLineItems(await getCheckoutId(), [variantId]);
 }
 
 async function getCheckout(): Promise<Client.Cart> {
@@ -56,14 +60,17 @@ async function getProduct(handle: string): Promise<Product> {
 
 async function getProductsByCollection(handle: string): Promise<Products> {
   const collection = await client.collection.fetchByHandle(handle);
+
+  /* eslint-disable-next-line @typescript-eslint/no-unsafe-call */
   return (collection as any).products.map((product: ShopifyBuy.Product) =>
     transformProduct(product),
-  );
+  ) as Products;
 }
 
 export default {
   allProducts,
   addProduct,
+  removeProduct,
   getCheckout,
   getProduct,
   getProductsByCollection,

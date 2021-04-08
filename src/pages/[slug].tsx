@@ -2,17 +2,17 @@ import { gql, useQuery } from '@apollo/client';
 import Layout from 'src/lib/components/Layout';
 import { ProductCard } from 'src/lib/components/ProductCard';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import shopify, { Products } from '../lib/state/shopify/services';
+import React from 'react';
+import { useProducts } from 'src/lib/state/shopify/actor';
 
 const PostPage = () => {
-  const [products, setProducts] = useState<Products>([]);
+  const products = useProducts();
   const router = useRouter();
   const { slug } = router.query;
-  const { data } = useQuery(
+  const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(
     gql`
       query GetPost($slug: String!) {
-        postBy(slug: $slug) {
+        post(id: $slug: idType: SLUG) {
           featuredImage {
             node {
               uri
@@ -35,19 +35,7 @@ const PostPage = () => {
     },
   );
 
-  const post = data?.postBy;
-
-  useEffect(() => {
-    async function getProducts() {
-      const products = await shopify.getProductsByCollection(
-        post?.tags?.nodes[0].name.replace('collection-', ''),
-      );
-      setProducts(products);
-    }
-    if (post) {
-      getProducts();
-    }
-  }, [post]);
+  const post = data?.post;
 
   return (
     <Layout>

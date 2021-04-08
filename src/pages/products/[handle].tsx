@@ -10,7 +10,9 @@ const ProductPage: React.FC = () => {
   const { handle } = router.query;
   const product = useProduct({ actionArgs: [handle as string] });
 
-  const { data } = useQuery(
+  const { data } = useQuery<{
+    productposts: { nodes: { data: { posts: string } }[] };
+  }>(
     gql`
       query GetProductPosts($title: String!) {
         productposts(where: { title: $title }) {
@@ -43,9 +45,10 @@ const ProductPage: React.FC = () => {
             <div className="card-body">
               <h5 className="card-title">{product?.title}</h5>
               <button
+                type="button"
                 className="btn btn-primary me-3"
                 onClick={() => {
-                  actions.addProduct(product?.variants[0].id as string);
+                  void actions.addProduct(product?.variants[0].id as string);
                 }}>
                 Add to Cart
               </button>

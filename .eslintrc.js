@@ -30,6 +30,7 @@ module.exports = {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     'import/no-extraneous-dependencies': 0,
     '@typescript-eslint/unbound-method': 0,
+    '@typescript-eslint/no-unsafe-member-access': 0,
     'no-void': 0,
     'import/named': 0,
     'import/prefer-default-export': 0,
@@ -40,6 +41,7 @@ module.exports = {
     ],
     'react/require-default-props': 0,
     'jsx-a11y/anchor-is-valid': 0,
+    'react/prop-types': 0,
   },
   settings: {
     react: {

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useCart } from 'src/lib/state/shopify/actor';
 
 const Nav: React.FC = () => {
@@ -18,7 +19,7 @@ const Nav: React.FC = () => {
           aria-controls="navbarText"
           aria-expanded="false"
           aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav mr-auto">
@@ -28,12 +29,10 @@ const Nav: React.FC = () => {
               </a>
             </li>
           </ul>
-          <a
-            className="navbar-text ms-auto"
-            href={(cart as any)?.webUrl}
-            target="_blank">
-            Cart:{' '}
-            {quantities?.reduce((total, quantity) => total + quantity) ?? 0}
+          <a className="navbar-text ms-auto" href="/cart">
+            {`Cart: ${
+              quantities?.reduce((total, quantity) => total + quantity, 0) ?? 0
+            }`}
           </a>
         </div>
       </div>

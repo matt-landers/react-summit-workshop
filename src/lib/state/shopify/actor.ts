@@ -1,8 +1,8 @@
 import { Cart } from 'shopify-buy';
-import service, { Products, Product } from './services';
 
 import tates from 'tates';
 import { createStateHook } from 'react-tates';
+import service, { Products, Product } from './services';
 
 export interface ShopifyState {
   product: Product;
@@ -25,7 +25,11 @@ export const actions = {
   },
   async addProduct(variantId: string): Promise<void> {
     await service.addProduct(variantId);
-    actions.getCart();
+    void actions.getCart();
+  },
+  async removeProduct(variantId: string): Promise<void> {
+    await service.removeProduct(variantId);
+    void actions.getCart();
   },
 };
 

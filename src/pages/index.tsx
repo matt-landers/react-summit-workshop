@@ -1,3 +1,4 @@
+import React from 'react';
 import Layout from 'src/lib/components/Layout';
 import { ProductCard } from 'src/lib/components/ProductCard';
 import { useProducts } from 'src/lib/state/shopify/actor';
