@@ -1,8 +1,6 @@
-import { Cart } from 'shopify-buy';
-
 import tates from 'tates';
 import { createStateHook } from 'react-tates';
-import service, { Products, Product } from './services';
+import service, { Products, Product, Cart } from './services';
 
 export interface ShopifyState {
   product: Product;

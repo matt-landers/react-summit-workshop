@@ -1,9 +1,11 @@
 import { actions } from 'src/lib/state/shopify/actor';
-import type { LineItem } from 'shopify-buy';
 import Link from 'next/link';
 import React from 'react';
+import { CartLineItem } from '../state/shopify/services';
 
-export const CartLineItemCard: React.FC<{ item: LineItem }> = ({ item }) => {
+export const CartLineItemCard: React.FC<{ item: CartLineItem }> = ({
+  item,
+}) => {
   return (
     <div className="card">
       <img
