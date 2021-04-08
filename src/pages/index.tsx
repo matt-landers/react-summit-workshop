@@ -1,11 +1,14 @@
 import React from 'react';
 import Layout from 'src/lib/components/Layout';
 import { ProductCard } from 'src/lib/components/ProductCard';
-import { useProducts } from 'src/lib/state/shopify/actor';
+import { allProducts } from 'src/lib/state/shopify/services';
+import { Products } from 'src/lib/state/shopify/queries';
 
-function Home() {
-  const products = useProducts();
+interface HomeProps {
+  products: Products;
+}
 
+function Home({ products }: HomeProps) {
   return (
     <Layout>
       <div className="row py-5">
@@ -21,3 +24,13 @@ function Home() {
 }
 
 export default Home;
+
+export async function getStaticProps() {
+  const products = await allProducts();
+
+  return {
+    props: {
+      products,
+    },
+  };
+}

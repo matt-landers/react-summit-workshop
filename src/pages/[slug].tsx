@@ -3,10 +3,14 @@ import Layout from 'src/lib/components/Layout';
 import { ProductCard } from 'src/lib/components/ProductCard';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useProducts } from 'src/lib/state/shopify/actor';
+import { Products } from 'src/lib/state/shopify/queries';
+import { allProducts } from 'src/lib/state/shopify/services';
 
-const PostPage = () => {
-  const products = useProducts();
+interface PostPageProps {
+  products: Products;
+}
+
+const PostPage = ({ products }: PostPageProps) => {
   const router = useRouter();
   const { slug } = router.query;
   const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(
@@ -57,3 +61,20 @@ const PostPage = () => {
 };
 
 export default PostPage;
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps() {
+  const products = await allProducts();
+
+  return {
+    props: {
+      products,
+    },
+  };
+}

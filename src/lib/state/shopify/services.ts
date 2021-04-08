@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import {
   AddLineItemVariables,
   ADD_LINE_ITEM,
@@ -27,14 +27,14 @@ const client = new ApolloClient({
   },
 });
 
-async function allProducts(): Promise<Products> {
+export async function allProducts(): Promise<Products> {
   const { data } = await client.query<AllProducts>({
     query: ALL_PRODUCTS,
   });
   return data.products;
 }
 
-async function getCheckoutId(): Promise<string> {
+export async function getCheckoutId(): Promise<string> {
   if (localStorage.getItem('checkoutId')) {
     return localStorage.getItem('checkoutId') ?? '';
   }
@@ -48,7 +48,8 @@ async function getCheckoutId(): Promise<string> {
   return data?.checkoutCreate.checkout.id as string;
 }
 
-async function addProduct(variantId: string): Promise<void> {
+export async function addProduct(variantId: string): Promise<void> {
+  console.log(variantId);
   await client.mutate<any, AddLineItemVariables>({
     mutation: ADD_LINE_ITEM,
     variables: {
@@ -58,7 +59,7 @@ async function addProduct(variantId: string): Promise<void> {
   });
 }
 
-async function removeProduct(variantId: string) {
+export async function removeProduct(variantId: string) {
   await client.mutate<any, RemoveLineItemVariables>({
     mutation: REMOVE_LINE_ITEM,
     variables: {
@@ -68,7 +69,7 @@ async function removeProduct(variantId: string) {
   });
 }
 
-async function getCheckout(): Promise<Checkout> {
+export async function getCheckout(): Promise<Checkout> {
   const { data } = await client.query<GetCheckout>({
     query: GET_CHECKOUT,
     variables: {
@@ -79,7 +80,7 @@ async function getCheckout(): Promise<Checkout> {
   return data.node;
 }
 
-async function getProduct(handle: string): Promise<Product> {
+export async function getProduct(handle: string): Promise<Product> {
   const { data } = await client.query<GetProduct>({
     query: GET_PRODUCT,
     variables: {
@@ -89,7 +90,7 @@ async function getProduct(handle: string): Promise<Product> {
   return data.productByHandle;
 }
 
-async function getProductsByCollection(handle: string): Promise<Products> {
+export async function getProductsByCollection(handle: string): Promise<Products> {
   const { data } = await client.query<GetProductsByCollection>({
     query: GET_PRODUCTS_BY_COLLECTION,
     variables: {
@@ -99,12 +100,3 @@ async function getProductsByCollection(handle: string): Promise<Products> {
 
   return data.collectionByHandle.products;
 }
-
-export default {
-  allProducts,
-  addProduct,
-  removeProduct,
-  getCheckout,
-  getProduct,
-  getProductsByCollection,
-};

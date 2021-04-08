@@ -3,13 +3,18 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import PostCard from 'src/lib/components/PostCard';
-import { actions, useProduct } from 'src/lib/state/shopify/actor';
+import { actions } from 'src/lib/state/shopify/actor';
+import { getProduct } from 'src/lib/state/shopify/services';
+import { GetStaticPropsContext } from 'next';
+import { Product } from 'src/lib/state/shopify/queries';
 
-const ProductPage: React.FC = () => {
+interface ProductPageProps {
+  product: Product;
+}
+
+const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const router = useRouter();
   const { handle } = router.query;
-  const product = useProduct({ actionArgs: [handle as string] });
-
   const { data } = useQuery<{
     productposts: { nodes: { data: { posts: string } }[] };
   }>(
@@ -70,3 +75,20 @@ const ProductPage: React.FC = () => {
 };
 
 export default ProductPage;
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps(ctx: GetStaticPropsContext) {
+  const product = await getProduct(ctx.params?.handle as string);
+
+  return {
+    props: {
+      product,
+    },
+  };
+}
