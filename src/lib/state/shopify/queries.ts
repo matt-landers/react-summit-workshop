@@ -11,7 +11,7 @@ export interface ProductImage {
 }
 
 export interface Product {
-  id: string | number;
+  id: string;
   title: string;
   description: string;
   images: Connection<ProductImage>;
@@ -20,7 +20,7 @@ export interface Product {
 }
 
 export interface ProductVariant {
-  id: string | number;
+  id: string;
   image?: ProductImage;
   product?: Pick<Product, 'handle'>;
 }
@@ -119,7 +119,7 @@ export interface CreateCheckout {
 }
 
 export interface CheckoutLineItem {
-  id: string | number;
+  id: string;
   title: string;
   quantity: number;
   variant: ProductVariant;
