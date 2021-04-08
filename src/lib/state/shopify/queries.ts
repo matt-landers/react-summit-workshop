@@ -1,74 +1,104 @@
 import { gql } from '@apollo/client';
 
-export const ALL_PRODUCTS = gql`
-  {
-    products(first: 10) {
+export interface Connection<T> {
+  edges: {
+    nodes: T[];
+  };
+}
+
+export interface ProductImage {
+  src: string;
+}
+
+export interface Product {
+  id: string | number;
+  title: string;
+  description: string;
+  onlineStoreUrl?: string;
+  images: Connection<ProductImage>;
+  variants: Connection<ProductVariant>;
+  handle: string;
+}
+
+export interface ProductVariant {
+  id: string | number;
+  image?: ProductImage;
+  product?: Pick<Product, 'handle'>;
+}
+
+export interface CheckoutInfo {
+  checkout: {
+    id: string;
+  };
+  checkoutUserErrors: {
+    code: string;
+    field: string;
+    message: string;
+  };
+}
+
+export interface Products extends Connection<Product> {}
+
+const PRODUCT_DATA = gql`
+  fragment productData on Product {
+    id
+    description
+    title
+    handle
+    images(first: 10) {
+      edges {
+        node {
+          src: originalSrc
+        }
+      }
+    }
+    variants(first: 10) {
       edges {
         node {
           id
-          description
-          title
+          price
+        }
+      }
+    }
+    collections(first: 10) {
+      edges {
+        node {
           handle
-          images(first: 10) {
-            edges {
-              node {
-                src: originalSrc
-              }
-            }
-          }
-          variants(first: 10) {
-            edges {
-              node {
-                id
-                price
-              }
-            }
-          }
-          collections(first: 10) {
-            edges {
-              node {
-                handle
-              }
-            }
-          }
         }
       }
     }
   }
 `;
 
-export const GET_PRODUCT = gql`
-  query GetProduct($handle: String!) {
-    productByHandle(handle: $handle) {
-      id
-      description
-      title
-      handle
-      images(first: 10) {
-        edges {
-          node {
-            src: originalSrc
-          }
-        }
-      }
-      variants(first: 10) {
-        edges {
-          node {
-            id
-            price
-          }
-        }
-      }
-      collections(first: 10) {
-        edges {
-          node {
-            handle
-          }
+export const ALL_PRODUCTS = gql`
+  ${PRODUCT_DATA}
+  {
+    products(first: 10) {
+      edges {
+        node {
+          ...productData
         }
       }
     }
   }
 `;
+
+export interface AllProducts {
+  products: Products;
+}
+
+export const GET_PRODUCT = gql`
+  ${PRODUCT_DATA}
+  query GetProduct($handle: String!) {
+    productByHandle(handle: $handle) {
+      ...productData
+    }
+  }
+`;
+
+export interface GetProduct {
+  productByHandle: Product;
+}
 
 const CREATE_CHECKOUT = gql`
   mutation checkoutCreate($input: CheckoutCreateInput!) {
@@ -84,6 +114,23 @@ const CREATE_CHECKOUT = gql`
     }
   }
 `;
+
+export interface CreateCheckout {
+  checkoutCreate: CheckoutInfo;
+}
+
+export interface CheckoutLineItem {
+  id: string | number;
+  title: string;
+  quantity: number;
+  variant: ProductVariant;
+}
+
+export interface Checkout {
+  id: string;
+  webUrl: string;
+  lineItems: Connection<CheckoutLineItem>;
+}
 
 export const GET_CHECKOUT = gql`
   query GetCheckout($id: ID!) {
@@ -113,6 +160,10 @@ export const GET_CHECKOUT = gql`
     }
   }
 `;
+
+export interface GetCheckout {
+  node: Checkout;
+}
 
 export const ADD_LINE_ITEM = gql`
   mutation checkoutLineItemsAdd(
