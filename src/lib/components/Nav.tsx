@@ -31,7 +31,7 @@ const Nav: React.FC = () => {
               </a>
             </li>
           </ul>
-          <a className="navbar-text ms-auto" href="/cart">
+          <a className="navbar-text ms-auto" href="/checkout">
             {`Cart: ${
               quantities?.reduce((total, quantity) => total + quantity, 0) ?? 0
             }`}
