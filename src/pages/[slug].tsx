@@ -11,8 +11,8 @@ const PostPage = () => {
   const { slug } = router.query;
   const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(
     gql`
-      query GetPost($slug: String!) {
-        post(id: $slug: idType: SLUG) {
+      query GetPost($slug: ID!) {
+        post(id: $slug, idType: SLUG) {
           featuredImage {
             node {
               uri

@@ -1,8 +1,12 @@
-import Client from 'shopify-buy';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ALL_PRODUCTS } from './queries';
 
-const client = Client.buildClient({
-  domain: 'devrel.myshopify.com',
-  storefrontAccessToken: 'b93aba823553b27aee2c51744caf0cf1',
+const client = new ApolloClient({
+  uri: 'https://devrel.myshopify.com/api/2021-04/graphql.json',
+  cache: new InMemoryCache(),
+  headers: {
+    'X-Shopify-Storefront-Access-Token': 'b93aba823553b27aee2c51744caf0cf1',
+  },
 });
 
 export interface ProductImage {
@@ -51,6 +55,7 @@ function transformProductVariant(
 }
 
 function transformProduct(product: ShopifyBuy.Product): Product {
+  console.log(product);
   return {
     id: product.id,
     images: product.images,
