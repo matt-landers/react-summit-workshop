@@ -99,7 +99,7 @@ export interface GetProduct {
   productByHandle: Product;
 }
 
-const CREATE_CHECKOUT = gql`
+export const CREATE_CHECKOUT = gql`
   mutation checkoutCreate($input: CheckoutCreateInput!) {
     checkoutCreate(input: $input) {
       checkout {
@@ -188,4 +188,27 @@ export type AddLineItemVariables = {
     quantity: number;
     variantId: string;
   }[];
+};
+
+export const REMOVE_LINE_ITEM = gql`
+  mutation checkoutLineItemsRemove($checkoutId: ID!, $lineItemIds: [ID!]!) {
+    checkoutLineItemsRemove(
+      checkoutId: $checkoutId
+      lineItemIds: $lineItemIds
+    ) {
+      checkout {
+        id
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
+export type RemoveLineItemVariables = {
+  checkoutId: string;
+  lineItemIds: string[];
 };
