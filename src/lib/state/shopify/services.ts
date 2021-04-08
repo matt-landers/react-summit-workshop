@@ -74,6 +74,7 @@ async function getCheckout(): Promise<Checkout> {
     variables: {
       id: await getCheckoutId(),
     },
+    fetchPolicy: 'no-cache'
   });
   return data.node;
 }
