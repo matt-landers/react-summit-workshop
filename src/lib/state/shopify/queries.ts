@@ -17,6 +17,7 @@ export interface Product {
   images: Connection<ProductImage>;
   variants: Connection<ProductVariant>;
   handle: string;
+  collections: Connection<Omit<Collection, 'products'>>;
 }
 
 export interface ProductVariant {
@@ -70,7 +71,10 @@ const PRODUCT_DATA = gql`
     collections(first: 10) {
       edges {
         node {
+          id
           handle
+          title
+          description
         }
       }
     }
@@ -245,5 +249,5 @@ export const GET_PRODUCTS_BY_COLLECTION = gql`
 `;
 
 export interface GetProductsByCollection {
-  collectionByHandle: Collection;
+  collectionByHandle?: Collection;
 }

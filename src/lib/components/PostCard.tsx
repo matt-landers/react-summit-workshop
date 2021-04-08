@@ -2,33 +2,14 @@ import React from 'react';
 import { gql, useQuery } from '@apollo/client';
 
 interface PostCardProps {
-  slug: string;
+  post: {
+    slug?: string;
+    title?: string;
+    excerpt?: string;
+  };
 }
 
-const PostCard: React.FC<PostCardProps> = ({ slug }) => {
-  const { data } = useQuery<{ post: WPGraphQL.RootQuery['post'] }>(
-    gql`
-      query GetPost($slug: String!) {
-        post(id: $slug, idType: SLUG) {
-          featuredImage {
-            node {
-              uri
-            }
-          }
-          title
-          excerpt
-        }
-      }
-    `,
-    {
-      variables: {
-        slug,
-      },
-    },
-  );
-
-  const post = data?.post;
-
+const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <div className="card mb-3">
       <div className="card-body">

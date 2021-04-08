@@ -123,5 +123,5 @@ export async function getProductsByCollection(
     },
   });
 
-  return data.collectionByHandle.products;
+  return data.collectionByHandle?.products || { edges: [] };
 }

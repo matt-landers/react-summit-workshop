@@ -5,39 +5,47 @@ import { useQuery, gql } from '@apollo/client';
 import PostCard from 'src/lib/components/PostCard';
 import { actions } from 'src/lib/state/shopify/actor';
 import { getProduct } from 'src/lib/state/shopify/services';
+import { getNextStaticProps } from '@wpengine/headless/next';
 import { GetStaticPropsContext } from 'next';
+import { getSiteSchema, useSiteSchema } from 'src/lib/seo';
 import { Product } from 'src/lib/state/shopify/queries';
+import { getApolloClient } from '@wpengine/headless';
+
+const productPostsQuery = gql`
+  query GetProductPosts($tag: String!) {
+    posts(where: { tag: $tag }) {
+      nodes {
+        title
+        excerpt
+        slug
+      }
+    }
+  }
+`;
 
 interface ProductPageProps {
   product: Product;
 }
 
 const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
-  const router = useRouter();
-  const { handle } = router.query;
-  const { data } = useQuery<{
-    productposts: { nodes: { data: { posts: string } }[] };
-  }>(
-    gql`
-      query GetProductPosts($title: String!) {
-        productposts(where: { title: $title }) {
-          nodes {
-            data: acfProductLinkGroup {
-              posts
-            }
-          }
-        }
-      }
-    `,
-    {
-      variables: {
-        title: handle,
-      },
+  const siteSchema = useSiteSchema();
+  const { data } = useQuery<WPGraphQL.GetPostsQuery>(productPostsQuery, {
+    variables: {
+      tag: `collection-${product.collections.edges[0].node.handle}`,
     },
-  );
+  });
 
   return (
-    <Layout>
+    <Layout
+      seo={{
+        page: {
+          title: product?.title,
+          seo: {
+            metaDesc: product?.description,
+          },
+        },
+        siteSchema: siteSchema?.siteSchema,
+      }}>
       <div className="row py-5">
         <div className="col-md-6">
           <div className="card">
@@ -61,11 +69,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           </div>
         </div>
         <div className="col-md-6">
-          {data?.productposts?.nodes[0]?.data?.posts
-            ?.split(',')
-            .map((slug: string) => (
-              <PostCard key={slug} slug={slug} />
-            ))}
+          {data?.posts.nodes?.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
         </div>
       </div>
     </Layout>
@@ -83,10 +89,16 @@ export function getStaticPaths() {
 
 export async function getStaticProps(ctx: GetStaticPropsContext) {
   const product = await getProduct(ctx.params?.handle as string);
-
-  return {
-    props: {
-      product,
+  const client = getApolloClient(ctx);
+  await getSiteSchema(client);
+  await client.query({
+    query: productPostsQuery,
+    variables: {
+      tag: `collection-${product.collections.edges[0].node.handle}`,
     },
-  };
+  });
+  const result = await getNextStaticProps(ctx);
+  result.props.product = product;
+
+  return result;
 }

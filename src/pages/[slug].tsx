@@ -4,12 +4,12 @@ import { ProductCard } from 'src/lib/components/ProductCard';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Products } from 'src/lib/state/shopify/queries';
-import {
-  getProductsByCollection,
-} from 'src/lib/state/shopify/services';
+import { getProductsByCollection } from 'src/lib/state/shopify/services';
 import { getApolloClient } from '@wpengine/headless';
 import { getNextStaticProps } from '@wpengine/headless/next';
 import { GetStaticPropsContext } from 'next';
+import { getSiteSchema, useSiteSchema } from 'src/lib/seo';
+import { PageSeo } from 'react-headless-yoast';
 
 const GET_POST = gql`
   query GetPost($slug: ID!) {
@@ -25,6 +25,47 @@ const GET_POST = gql`
         nodes {
           name
         }
+      }
+      seo {
+        breadcrumbs {
+          text
+          url
+        }
+        schema {
+          articleType
+          pageType
+          raw
+        }
+        canonical
+        cornerstone
+        focuskw
+        metaDesc
+        metaKeywords
+        metaRobotsNofollow
+        metaRobotsNoindex
+        opengraphAuthor
+        opengraphDescription
+        opengraphImage {
+          altText
+          srcSet
+          sourceUrl
+        }
+        opengraphModifiedTime
+        opengraphPublishedTime
+        opengraphPublisher
+        opengraphSiteName
+        opengraphTitle
+        opengraphType
+        opengraphUrl
+        readingTime
+        title
+        twitterDescription
+        twitterImage {
+          altText
+          srcSet
+          sourceUrl
+        }
+        twitterTitle
       }
     }
   }
@@ -42,11 +83,16 @@ const PostPage = ({ products }: PostPageProps) => {
       slug,
     },
   });
+  const siteSchema = useSiteSchema();
 
   const post = data?.post;
 
   return (
-    <Layout>
+    <Layout
+      seo={{
+        page: post as PageSeo,
+        siteSchema: siteSchema?.siteSchema,
+      }}>
       <div className="row">
         <div className="col-md-9">
           <article>
@@ -76,6 +122,7 @@ export function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const slug = context?.params?.slug as string;
   const client = getApolloClient(context);
+  await getSiteSchema(client);
 
   const { data } = await client.query({
     query: GET_POST,
@@ -83,6 +130,12 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       slug,
     },
   });
+
+  if (!data.post) {
+    return {
+      notFound: true
+    };
+  }
 
   let products: Products = { edges: [] };
 
