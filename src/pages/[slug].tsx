@@ -101,8 +101,8 @@ const PostPage = ({ products }: PostPageProps) => {
           </article>
         </div>
         <div className="col-md-3">
-          {products?.edges.map((product) => (
-            <ProductCard key={product.node.id} product={product.node} />
+          {products?.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
@@ -137,7 +137,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     };
   }
 
-  let products: Products = { edges: [] };
+  let products: Products = [];
 
   if (data.post.tags.nodes.length > 0) {
     const tag: string = data.post.tags.nodes.map(

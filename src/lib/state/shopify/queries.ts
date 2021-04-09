@@ -10,20 +10,30 @@ export interface ProductImage {
   src: string;
 }
 
-export interface Product {
+export interface ProductWithRelay {
   id: string;
   title: string;
   description: string;
   images: Connection<ProductImage>;
   variants: Connection<ProductVariant>;
   handle: string;
-  collections: Connection<Omit<Collection, 'products'>>;
+  collections: Connection<Collection>;
+}
+
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  images: ProductImage[];
+  variants: ProductVariant[];
+  handle: string;
+  collections: Collection[];
 }
 
 export interface ProductVariant {
   id: string;
   image?: ProductImage;
-  product: Pick<Product, 'handle'>;
+  product: Pick<ProductWithRelay, 'handle'>;
 }
 
 export interface CheckoutInfo {
@@ -37,14 +47,16 @@ export interface CheckoutInfo {
   };
 }
 
-export type Products = Connection<Product>;
+export type ProductsWithRelay = Connection<ProductWithRelay>;
+
+export type Products = Product[];
 
 export interface Collection {
   id: string;
   handle: string;
   title: string;
   description: string;
-  products: Products;
+  products: ProductsWithRelay;
 }
 
 const PRODUCT_DATA = gql`
@@ -91,7 +103,7 @@ export const GET_PRODUCT = gql`
 `;
 
 export interface GetProduct {
-  productByHandle: Product;
+  productByHandle: ProductWithRelay;
 }
 
 export const CREATE_CHECKOUT = gql`
@@ -124,10 +136,16 @@ export interface CheckoutLineItem {
   variant: ProductVariant;
 }
 
-export interface Checkout {
+export interface CheckoutWithRelay {
   id: string;
   webUrl: string;
   lineItems: Connection<CheckoutLineItem>;
+}
+
+export interface Checkout {
+  id: string;
+  webUrl: string;
+  lineItems: CheckoutLineItem[];
 }
 
 export const GET_CHECKOUT = gql`
@@ -160,7 +178,7 @@ export const GET_CHECKOUT = gql`
 `;
 
 export interface GetCheckout {
-  node: Checkout;
+  node: CheckoutWithRelay;
 }
 
 export const ADD_LINE_ITEM = gql`

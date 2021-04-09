@@ -3,15 +3,13 @@ import { useCheckout } from 'src/lib/state/shopify/actor';
 
 const Nav: React.FC = () => {
   const checkout = useCheckout();
-  const quantities = checkout?.lineItems?.edges.map(
-    (item) => item.node.quantity,
-  );
+  const quantities = checkout?.lineItems?.map((item) => item.quantity);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
         <a className="navbar-brand" href="/">
-          Nerd Shirts
+          Nerd Stickers
         </a>
         <button
           className="navbar-toggler"

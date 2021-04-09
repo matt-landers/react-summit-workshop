@@ -12,10 +12,13 @@ import {
   GET_CHECKOUT,
   GET_PRODUCT,
   GET_PRODUCTS_BY_COLLECTION,
-  Product,
-  Products,
+  ProductWithRelay,
+  ProductsWithRelay,
   RemoveLineItemVariables,
   REMOVE_LINE_ITEM,
+  Product,
+  Products,
+  CheckoutWithRelay,
 } from './queries';
 
 const isServerSide = typeof window === 'undefined';
@@ -28,6 +31,31 @@ const client = new ApolloClient({
     'X-Shopify-Storefront-Access-Token': 'b93aba823553b27aee2c51744caf0cf1',
   },
 });
+
+function mapProduct(relay: ProductWithRelay): Product {
+  const product: Product = {
+    id: relay.id,
+    handle: relay.handle,
+    title: relay.title,
+    description: relay.description,
+    images: relay.images.edges.map((i) => i.node),
+    collections: relay.collections.edges.map((c) => c.node),
+    variants: relay.variants.edges.map((v) => v.node),
+  };
+  return product;
+}
+
+function mapProducts(relay: ProductsWithRelay): Products {
+  return relay.edges.map((p) => mapProduct(p.node));
+}
+
+function mapCheckout(relay: CheckoutWithRelay): Checkout {
+  return {
+    id: relay.id,
+    webUrl: relay.webUrl,
+    lineItems: relay.lineItems.edges.map((li) => li.node),
+  };
+}
 
 export async function getCheckoutId(): Promise<string> {
   if (isServerSide) {
@@ -91,7 +119,7 @@ export async function getCheckout(): Promise<Checkout | null> {
     },
     fetchPolicy: 'no-cache',
   });
-  return data.node;
+  return mapCheckout(data.node);
 }
 
 export async function getProduct(handle: string): Promise<Product> {
@@ -101,7 +129,7 @@ export async function getProduct(handle: string): Promise<Product> {
       handle,
     },
   });
-  return data.productByHandle;
+  return mapProduct(data.productByHandle);
 }
 
 export async function getProductsByCollection(
@@ -114,5 +142,7 @@ export async function getProductsByCollection(
     },
   });
 
-  return data.collectionByHandle?.products || { edges: [] };
+  return data.collectionByHandle?.products
+    ? mapProducts(data.collectionByHandle?.products)
+    : [];
 }

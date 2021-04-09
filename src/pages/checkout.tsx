@@ -5,7 +5,7 @@ import { CheckoutLineItemCard } from 'src/lib/components/CheckoutLineItemCard';
 
 const CartPage: React.FC = () => {
   const checkout = useCheckout();
-  const hasItems = (checkout?.lineItems?.edges?.length as number) > 0;
+  const hasItems = (checkout?.lineItems?.length as number) > 0;
   return (
     <Layout>
       {checkout && !hasItems && (
@@ -16,9 +16,9 @@ const CartPage: React.FC = () => {
         </div>
       )}
       <div className="row py-5">
-        {checkout?.lineItems.edges.map((item) => (
-          <div key={item.node.id} className="col-md-4">
-            <CheckoutLineItemCard key={item.node.id} item={item.node} />
+        {checkout?.lineItems.map((item) => (
+          <div key={item.id} className="col-md-4">
+            <CheckoutLineItemCard key={item.id} item={item} />
           </div>
         ))}
       </div>

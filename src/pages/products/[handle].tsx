@@ -30,7 +30,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const siteSchema = useSiteSchema();
   const { data } = useQuery<WPGraphQL.GetPostsQuery>(productPostsQuery, {
     variables: {
-      tag: `collection-${product.collections.edges[0].node.handle}`,
+      tag: `collection-${product.collections[0].handle}`,
     },
   });
 
@@ -43,7 +43,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             metaDesc: product?.description,
             opengraphImage: {
               altText: product?.title,
-              sourceUrl: product?.images.edges[0].node.src,
+              sourceUrl: product?.images[0].src,
             },
           },
         },
@@ -54,7 +54,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           <div className="card">
             <img
               style={{ maxWidth: '300px' }}
-              src={product?.images.edges[0].node.src}
+              src={product?.images[0].src}
               alt=""
               className="card-img-top"
             />
@@ -64,7 +64,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                 type="button"
                 className="btn btn-primary me-3"
                 onClick={() => {
-                  void actions.addProduct(product?.variants.edges[0].node.id);
+                  void actions.addProduct(product?.variants[0].id);
                 }}>
                 Add to Cart
               </button>
@@ -97,7 +97,7 @@ export async function getStaticProps(ctx: GetStaticPropsContext) {
   await client.query({
     query: productPostsQuery,
     variables: {
-      tag: `collection-${product.collections.edges[0].node.handle}`,
+      tag: `collection-${product.collections[0].handle}`,
     },
   });
   const result = await getNextStaticProps(ctx);

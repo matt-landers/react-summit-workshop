@@ -6,18 +6,14 @@ import { Product } from '../state/shopify/queries';
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <div className="card">
-      <img
-        src={product.images.edges[0].node.src}
-        alt=""
-        className="card-img-top"
-      />
+      <img src={product.images[0].src} alt="" className="card-img-top" />
       <div className="card-body">
         <h5 className="card-title">{product.title}</h5>
         <button
           type="button"
           className="btn btn-primary me-3"
           onClick={() => {
-            void actions.addProduct(product.variants.edges[0].node.id);
+            void actions.addProduct(product.variants[0].id);
           }}>
           Add to Cart
         </button>
