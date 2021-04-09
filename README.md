@@ -5,7 +5,11 @@ This repo contains the code used in the React Summit Workshop.
 To follow along, clone the starter project:
 
 ```
-git clone ...
+git clone https://github.com/matt-landers/react-summit-workshop
+cd react-summit-workshop
+git checkout start
+rm -rf .git
+git init
 ```
 
 ## Learn More
