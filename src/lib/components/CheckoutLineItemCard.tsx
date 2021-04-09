@@ -9,7 +9,7 @@ export const CheckoutLineItemCard: React.FC<{ item: CheckoutLineItem }> = ({
   return (
     <div className="card">
       <img
-        src={(item as any).variant.image.src as string}
+        src={item?.variant?.image?.src ?? '#'}
         alt=""
         className="card-img-top"
       />
