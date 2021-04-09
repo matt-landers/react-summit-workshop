@@ -33,12 +33,14 @@ interface HomeProps {
 
 function Home({ postProducts }: HomeProps) {
   const siteSchema = useSiteSchema();
-  const featuredPosts = useQuery<WPGraphQL.GetPostsQuery>(featuredPostsQuery);
+  const { data } = useQuery<WPGraphQL.GetPostsQuery>(featuredPostsQuery);
+
+  const posts = data?.posts?.nodes ?? [];
 
   return (
     <Layout seo={siteSchema}>
       <div className="row py-5">
-        {featuredPosts.data?.posts.nodes.map((post) => (
+        {posts.map((post) => (
           <React.Fragment key={post.slug}>
             <div className="col-md-12 py-5">
               <PostCard post={post} />
