@@ -1,5 +1,4 @@
 import Layout from 'src/lib/components/Layout';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import PostCard from 'src/lib/components/PostCard';
