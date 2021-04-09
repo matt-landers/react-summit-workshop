@@ -93,7 +93,7 @@ const PostPage = ({ products }: PostPageProps) => {
         page: post as PageSeo,
         siteSchema: siteSchema?.siteSchema,
       }}>
-      <div className="row">
+      <div className="row mt-4">
         <div className="col-md-9">
           <article>
             <h1>{post?.title}</h1>
@@ -102,7 +102,7 @@ const PostPage = ({ products }: PostPageProps) => {
         </div>
         <div className="col-md-3">
           {products?.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard className="mb-3" key={product.id} product={product} />
           ))}
         </div>
       </div>

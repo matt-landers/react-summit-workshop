@@ -1,5 +1,4 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
 import Link from 'next/link';
 
 interface PostHeaderProps {
@@ -12,8 +11,8 @@ interface PostHeaderProps {
 
 const PostHeader: React.FC<PostHeaderProps> = ({ post }) => {
   return (
-    <div className="">
-      <h1 className="card-title">
+    <div>
+      <h1>
         <Link href={`/${post?.slug as string}`}>
           <a href={`/${post?.slug as string}`}>{post?.title as string}</a>
         </Link>
