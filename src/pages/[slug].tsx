@@ -124,16 +124,16 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const client = getApolloClient(context);
   await getSiteSchema(client);
 
-  const { data } = await client.query({
+  const { data } = await client.query<{ post: WPGraphQL.RootQuery['post'] }>({
     query: GET_POST,
     variables: {
       slug,
     },
   });
 
-  if (!data.post) {
+  if (!data?.post?.tags?.nodes) {
     return {
-      notFound: true
+      notFound: true,
     };
   }
 
@@ -141,8 +141,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 
   if (data.post.tags.nodes.length > 0) {
     const tag: string = data.post.tags.nodes.map(
-      (tag: { name: string }) => tag.name,
-    )[0];
+      (postTag) => postTag.name,
+    )[0] as string;
     products = await getProductsByCollection(tag.replace('collection-', ''));
   }
 

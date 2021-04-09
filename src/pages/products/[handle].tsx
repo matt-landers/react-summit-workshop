@@ -42,6 +42,10 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           title: product?.title,
           seo: {
             metaDesc: product?.description,
+            opengraphImage: {
+              altText: product?.title,
+              sourceUrl: product?.images.edges[0].node.src,
+            },
           },
         },
         siteSchema: siteSchema?.siteSchema,

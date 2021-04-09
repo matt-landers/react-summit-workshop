@@ -15,10 +15,7 @@ export const CheckoutLineItemCard: React.FC<{ item: CheckoutLineItem }> = ({
       />
       <div className="card-body">
         <h5 className="card-title">{item.title}</h5>
-        <p>
-          Quantity:
-          {item.quantity}
-        </p>
+        <p>{`Quantity: ${item.quantity}`}</p>
         <button
           type="button"
           className="btn btn-primary me-3"

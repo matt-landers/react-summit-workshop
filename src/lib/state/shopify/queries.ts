@@ -81,23 +81,6 @@ const PRODUCT_DATA = gql`
   }
 `;
 
-export const ALL_PRODUCTS = gql`
-  ${PRODUCT_DATA}
-  {
-    products(first: 10) {
-      edges {
-        node {
-          ...productData
-        }
-      }
-    }
-  }
-`;
-
-export interface AllProducts {
-  products: Products;
-}
-
 export const GET_PRODUCT = gql`
   ${PRODUCT_DATA}
   query GetProduct($handle: String!) {

@@ -2,8 +2,6 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 import {
   AddLineItemVariables,
   ADD_LINE_ITEM,
-  AllProducts,
-  ALL_PRODUCTS,
   Checkout,
   CheckoutCreateInput,
   CreateCheckout,
@@ -30,13 +28,6 @@ const client = new ApolloClient({
     'X-Shopify-Storefront-Access-Token': 'b93aba823553b27aee2c51744caf0cf1',
   },
 });
-
-export async function allProducts(): Promise<Products> {
-  const { data } = await client.query<AllProducts>({
-    query: ALL_PRODUCTS,
-  });
-  return data.products;
-}
 
 export async function getCheckoutId(): Promise<string> {
   if (isServerSide) {

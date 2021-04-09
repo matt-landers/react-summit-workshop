@@ -1,5 +1,11 @@
-import { gql, ApolloQueryResult, QueryResult, useQuery, ApolloClient } from "@apollo/client";
-import { SeoProps } from "react-headless-yoast";
+import {
+  gql,
+  ApolloQueryResult,
+  QueryResult,
+  useQuery,
+  ApolloClient,
+} from '@apollo/client';
+import { SeoProps } from 'react-headless-yoast';
 
 export const seoQuery = gql`
   {
