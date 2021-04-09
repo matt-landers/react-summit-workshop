@@ -10,16 +10,22 @@ export interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, seo }) => {
   return (
     <>
-      <Head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/favicon.ico" type="image/x-icon" />
-      </Head>
       {seo && (
         <Seo
           pageSchema={seo?.pageSchema}
           siteSchema={seo?.siteSchema}
           page={seo?.page ?? { title: 'Nerd Stickers' }}
           MetaRenderElement={Head}
+          meta={
+            <>
+              <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+              <link
+                rel="apple-touch-icon"
+                href="/favicon.ico"
+                type="image/x-icon"
+              />
+            </>
+          }
         />
       )}
       <Nav />
