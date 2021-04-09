@@ -2,13 +2,13 @@ import React from 'react';
 import Layout from 'src/lib/components/Layout';
 import { ProductCard } from 'src/lib/components/ProductCard';
 import { getProductsByCollection } from 'src/lib/state/shopify/services';
-import { Products, ProductsWithRelay } from 'src/lib/state/shopify/queries';
+import { Products } from 'src/lib/state/shopify/queries';
 import { getSiteSchema, useSiteSchema } from 'src/lib/seo';
 import { GetStaticPropsContext } from 'next';
 import { getNextStaticProps } from '@wpengine/headless/next';
 import { getApolloClient } from '@wpengine/headless';
 import { gql, useQuery } from '@apollo/client';
-import PostCard from 'src/lib/components/PostCard';
+import PostHeader from 'src/lib/components/PostHeader';
 
 const featuredPostsQuery = gql`
   query {
@@ -39,23 +39,18 @@ function Home({ postProducts }: HomeProps) {
 
   return (
     <Layout seo={siteSchema}>
-      <div className="row py-5">
-        {posts.map((post) => (
-          <React.Fragment key={post.slug}>
-            <div className="col-md-12 py-5">
-              <PostCard post={post} />
-              <div className="row">
-                {postProducts[post.slug]?.map((product) => (
-                  <div key={product.id} className="col-md-4">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
+      {posts.map((post) => (
+        <div className="row my-4" key={post.slug}>
+          <div className="col-md-12">
+            <PostHeader post={post} />
+          </div>
+          {postProducts[post.slug]?.map((product) => (
+            <div key={product.id} className="col-md-4">
+              <ProductCard product={product} />
             </div>
-            <hr />
-          </React.Fragment>
-        ))}
-      </div>
+          ))}
+        </div>
+      ))}
     </Layout>
   );
 }
