@@ -1,14 +1,9 @@
-# Headless WordPress Getting Started Example
+# Mixing Content, Commerce, and SEO with Headless WordPress
 
-## Setup
+This repo contains the code used in the React Summit Workshop.
 
-See the [setup steps](https://github.com/wpengine/headless-framework#quick-start).
+To follow along, clone the starter project:
 
-## Run it
-
-```bash
-npm install
-npm run dev
 ```
-
-[http://localhost:3000]()
+git clone ...
+```
